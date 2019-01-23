@@ -5,7 +5,11 @@ import java.rmi.RemoteException;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
-
+/**
+ * 
+ * @author daiwenzhi
+ *
+ */
 public class FleetController implements EventListenerInterface{
 
 	/** the simulator. */

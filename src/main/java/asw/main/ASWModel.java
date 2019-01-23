@@ -28,8 +28,6 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
     private  Fleet f2;
     private  Submarine s1;
    
-
-
     /**
      * constructs a new BallModel.
      * @param simulator the simulator
@@ -65,8 +63,6 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             s1.addListener(f2._sensor, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
             s1.addListener(f1._decoy1, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
             s1.addListener(f1._decoy2, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
-           
-            
             
         }
         catch (RemoteException exception)

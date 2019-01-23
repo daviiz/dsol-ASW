@@ -90,7 +90,7 @@ public class Fleet extends Ball implements EventListenerInterface{
     {
         this.origin = this.destination;
         //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
-        this.destination = new CartesianPoint(this.destination.x+1, this.destination.y+1, 0);
+        this.destination = new CartesianPoint(this.destination.x+2, this.destination.y+2, 0);
         this.startTime = this.simulator.getSimulatorTime();
         this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
         this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);

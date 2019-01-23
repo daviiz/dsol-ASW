@@ -14,9 +14,14 @@ public class Torpedo extends Ball implements EventListenerInterface{
 	 * 
 	 */
 	private static final long serialVersionUID = -8295279255703776031L;
+	
+	/** the simulator. */
+    private DEVSSimulatorInterface.TimeDouble simulator = null;
 
 	public Torpedo(final DEVSSimulatorInterface.TimeDouble simulator) {
-		// TODO Auto-generated constructor stub
+
+		this.simulator = simulator;
+		
 	}
 	
 	@Override

@@ -8,8 +8,12 @@ import nl.tudelft.simulation.event.EventListenerInterface;
 
 public class FleetSensor implements EventListenerInterface{
 
+	/** the simulator. */
+    private DEVSSimulatorInterface.TimeDouble simulator = null;
+	
 	public FleetSensor(final DEVSSimulatorInterface.TimeDouble simulator) {
-		// TODO Auto-generated constructor stub
+
+		this.simulator = simulator;
 	}
 
 	@Override

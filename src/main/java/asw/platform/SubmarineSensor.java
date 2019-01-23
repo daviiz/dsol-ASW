@@ -27,7 +27,7 @@ public class SubmarineSensor extends Ball implements EventListenerInterface{
 	public void notify(final EventInterface event) throws RemoteException {
 		if (event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT))
         {
-            System.out.println("sadffffffffffff");
+            System.out.println("received subscribled event!!--- SubmarineSensor ");
 			//fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(), this.simulator.getSimulatorTime());
         }
 	}

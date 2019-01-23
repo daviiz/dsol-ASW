@@ -8,8 +8,13 @@ import nl.tudelft.simulation.event.EventListenerInterface;
 
 public class SubmarineController implements EventListenerInterface{
 
+	/** the simulator. */
+    private DEVSSimulatorInterface.TimeDouble simulator = null;
+	
 	public SubmarineController(final DEVSSimulatorInterface.TimeDouble simulator) {
-		// TODO Auto-generated constructor stub
+		
+		this.simulator = simulator;
+		
 	}
 
 	@Override

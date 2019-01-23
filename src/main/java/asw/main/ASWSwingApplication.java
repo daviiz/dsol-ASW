@@ -55,7 +55,7 @@ public class ASWSwingApplication extends DSOLApplication
                 Replication.TimeDouble.create("rep1", 0.0, 0.0, 1000000.0, model);
         DSOLPanel<Double, Double, SimTimeDouble> panel = new DSOLPanel<Double, Double, SimTimeDouble>(model, simulator);
         panel.getTabbedPane().add("animation",
-                new AnimationPanel(new Rectangle2D.Double(-100, -100, 200, 200), new Dimension(200, 200), simulator));
+                new AnimationPanel(new Rectangle2D.Double(-100, -100, 400, 400), new Dimension(200, 200), simulator));
         panel.getTabbedPane().setSelectedIndex(1);
         simulator.initialize(replication, ReplicationMode.TERMINATING);
         new ASWSwingApplication("Anti-Submarine-Warfare", panel);

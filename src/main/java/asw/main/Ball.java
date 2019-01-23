@@ -8,6 +8,7 @@ import javax.media.j3d.Bounds;
 import javax.vecmath.Point3d;
 
 import nl.tudelft.simulation.dsol.animation.Locatable;
+import nl.tudelft.simulation.event.EventProducer;
 
 /**
  * A Ball.
@@ -20,9 +21,14 @@ import nl.tudelft.simulation.dsol.animation.Locatable;
  * </p>
  * @author <a href="https://simulation.tudelft.nl/people/jacobs.html">Peter Jacobs </a>
  */
-public abstract class Ball implements Locatable
+public abstract class Ball extends EventProducer implements Locatable
 {
-    /** the number of created balls. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = 4929602131070323337L;
+
+	/** the number of created balls. */
     private static int number = 0;
 
     /** the radius of the ball. */
@@ -43,6 +49,16 @@ public abstract class Ball implements Locatable
         this.theta = 2 * Math.PI * Math.random();
         Ball.number++;
         this.name = "" + Ball.number;
+    }
+    /**
+     * constructs a new Ball.
+     */
+    public Ball(String name)
+    {
+        super();
+        this.theta = 2 * Math.PI * Math.random();
+        Ball.number++;
+        this.name = name + Ball.number;
     }
 
     /** {@inheritDoc} */

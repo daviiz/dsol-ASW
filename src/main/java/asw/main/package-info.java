@@ -1,4 +1,4 @@
-package asw;
+package asw.main;
 /**
  * A model with 2D animation; positions provided by a DEVS model with discrete updates.
  * <p>

@@ -1,4 +1,4 @@
-package asw;
+package asw.main;
 
 
 import java.rmi.RemoteException;

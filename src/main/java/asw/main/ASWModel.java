@@ -5,6 +5,7 @@ import java.rmi.RemoteException;
 
 import asw.platform.Fleet;
 import asw.platform.Submarine;
+import asw.weapon.Decoy;
 import asw.weapon.Torpedo;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.logger.SimLogger;
@@ -83,6 +84,16 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             s1._t1.addListener(f2, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t2.addListener(f1, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t2.addListener(f2, Torpedo.TORPEDO_LOCATION_MSG);
+            
+            f1._decoy1.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
+            f1._decoy1.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
+            f1._decoy2.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
+            f1._decoy2.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
+            
+            f2._decoy1.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
+            f2._decoy1.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
+            f2._decoy2.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
+            f2._decoy2.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
 
             
             

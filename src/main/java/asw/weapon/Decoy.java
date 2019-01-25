@@ -1,12 +1,22 @@
 package asw.weapon;
 
+import java.awt.Color;
 import java.rmi.RemoteException;
 
+import javax.naming.NamingException;
+
 import asw.main.Ball;
+import asw.main.BallAnimation;
+import asw.main.EntityMSG;
+import asw.main.SimUtil;
+import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
 import nl.tudelft.simulation.event.EventType;
+import nl.tudelft.simulation.jstats.distributions.DistNormal;
+import nl.tudelft.simulation.jstats.streams.MersenneTwister;
+import nl.tudelft.simulation.jstats.streams.StreamInterface;
 import nl.tudelft.simulation.language.d3.CartesianPoint;
 import nl.tudelft.simulation.language.d3.DirectedPoint;
 
@@ -37,6 +47,13 @@ public class Decoy extends Ball implements EventListenerInterface{
     /** the stop time. */
     private double stopTime = Double.NaN;
     
+    private boolean isFired = false;
+    
+    private EntityMSG lastThreat = null;
+    
+    /** the stream -- ugly but works. */
+    private static StreamInterface stream = new MersenneTwister();
+    
 	/**
 	 * 
 	 */
@@ -45,8 +62,6 @@ public class Decoy extends Ball implements EventListenerInterface{
 	/** the simulator. */
     private DEVSSimulatorInterface.TimeDouble simulator = null;
 	
-	public static final EventType DECOY_LOCATION_UPDATE_EVENT = new EventType("DECOY_LOCATION_UPDATE_EVENT");
-
 	public Decoy(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) {
 		super(name);
 		this.name = name;
@@ -57,9 +72,54 @@ public class Decoy extends Ball implements EventListenerInterface{
 	}
 	@Override
 	public void notify(EventInterface event) throws RemoteException {
-		// TODO Auto-generated method stub
+		if(isFired) {
+			if(event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
+	        	EntityMSG tmp = (EntityMSG) event.getContent();
+	        	System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
+	        	double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
+	        	//战舰雷达探测方位：100
+	        	if(dis<100) {
+	        		lastThreat = tmp;
+	        	}
+	        	
+	        }
+		}
 		
 	}
+	//鱼雷被发射：鱼雷的速度为4；
+	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
+		isFired = true;
+		//lastThreat = null;
+		lastThreat = object;
+		new BallAnimation(this, this.simulator, Color.GREEN);
+		next();
+	}
+	/**
+     * next movement.
+     * @throws RemoteException on network failure
+     * @throws SimRuntimeException on simulation failure
+     */
+    private synchronized void next() throws RemoteException, SimRuntimeException
+    {
+    	
+        
+    	this.origin = this.destination;
+        //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
+        //this.destination = new CartesianPoint(this.destination.x+4, this.destination.y+4, 0);
+    	if(lastThreat == null) {
+        	//this.destination = new CartesianPoint(this.destination.x, this.destination.y, 0);
+        }else {
+        	this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastThreat.x, lastThreat.y, 2.0,true);
+        }
+        this.startTime = this.simulator.getSimulatorTime();
+        this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+        this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
+        super.fireTimedEvent(DECOY_LOCATION_MSG, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
+        
+    }
+    private synchronized void destroy() {
+    	System.out.println("");
+    }
 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {

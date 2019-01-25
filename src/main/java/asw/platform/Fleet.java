@@ -148,7 +148,7 @@ public class Fleet extends Ball implements EventListenerInterface{
         		if(decoyCouts == 2) {
 					try {
 						_decoy1.setLocation(this.origin);
-						this.simulator.scheduleEventRel(2.0, this, _decoy1, "fire", new Object[] {tmp});
+						this.simulator.scheduleEventRel(20.0, this, _decoy1, "fire", new Object[] {tmp});
 						decoyCouts--;
 					} catch (SimRuntimeException e) {
 						e.printStackTrace();
@@ -156,7 +156,7 @@ public class Fleet extends Ball implements EventListenerInterface{
 				}else if (decoyCouts == 1){
 					try {
 						_decoy2.setLocation(this.origin);
-						this.simulator.scheduleEventRel(2.0, this, _decoy2, "fire", new Object[] {tmp});
+						this.simulator.scheduleEventRel(120.0, this, _decoy2, "fire", new Object[] {tmp});
 						decoyCouts--;
 					} catch (SimRuntimeException e) {
 						e.printStackTrace();

@@ -24,6 +24,7 @@ public class SimUtil {
 	 * @param des_x
 	 * @param des_y
 	 * @param _speed
+	 * @param isFllow 是否跟随，true代表跟随，false代表逃逸、远离
 	 * @return
 	 */
 	public static CartesianPoint nextPoint(double src_x,double src_y,double des_x,double des_y,double _speed,boolean isFllow) {

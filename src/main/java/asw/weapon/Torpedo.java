@@ -14,6 +14,7 @@ import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
+import nl.tudelft.simulation.event.EventType;
 import nl.tudelft.simulation.jstats.distributions.DistNormal;
 import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
@@ -24,13 +25,13 @@ public class Torpedo extends Ball implements EventListenerInterface{
 
 	private static final long serialVersionUID = -8295279255703776031L;
 	
+	public static final EventType TORPEDO_LOCATION_MSG = new EventType("TORPEDO_LOCATION_MSG");
+	
 	public int belong = -1;
     
     public boolean status = true;
     
     public boolean isFired = false;
-    
-    public String target = "";
     
     public String name = "";
     
@@ -51,6 +52,10 @@ public class Torpedo extends Ball implements EventListenerInterface{
     
 	/** the simulator. */
     private DEVSSimulatorInterface.TimeDouble simulator = null;
+    
+    private  EntityMSG lastTarget = null;
+    
+    private double lastDistance = 400;
 
 	public Torpedo(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) {
 		super(name);
@@ -63,15 +68,14 @@ public class Torpedo extends Ball implements EventListenerInterface{
 	
 	@Override
 	public void notify(EventInterface event) throws RemoteException {
+		
 		if(isFired) {
-			if(event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT)){
-				EntityMSG tmp = (EntityMSG) event.getContent();
-				if(target.equals(tmp.name)) {
-					this.origin = this.destination;
-			        //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
-			        this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, tmp.x, tmp.y, 4.0,true);
-			        //this.startTime = this.simulator.getSimulatorTime();
-			        //this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+			EntityMSG tmp = (EntityMSG) event.getContent();
+			
+			if(event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT) || event.getType().equals(Decoy.DECOY_LOCATION_MSG)){
+				double tmpL = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
+				if(tmpL<lastDistance) {
+					lastTarget = tmp;
 				}
 			}
 			
@@ -80,7 +84,7 @@ public class Torpedo extends Ball implements EventListenerInterface{
 	//鱼雷被发射：鱼雷的速度为4；
 	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
 		isFired = true;
-		target = object.name;
+		lastTarget = object;
 		new BallAnimation(this, this.simulator, Color.YELLOW);
 		next();
 	}
@@ -90,16 +94,21 @@ public class Torpedo extends Ball implements EventListenerInterface{
      * @throws RemoteException on network failure
      * @throws SimRuntimeException on simulation failure
      */
-    private void next() throws RemoteException, SimRuntimeException
+    private synchronized void next() throws RemoteException, SimRuntimeException
     {
-        //this.origin = this.destination;
+        this.origin = this.destination;
         //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
         //this.destination = new CartesianPoint(this.destination.x+4, this.destination.y+4, 0);
+    	if(lastTarget == null) {
+        	this.destination = new CartesianPoint(this.destination.x+4, this.destination.y+4, 0);
+        }else {
+        	this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastTarget.x, lastTarget.y, 4.0,true);
+        }
         this.startTime = this.simulator.getSimulatorTime();
         this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
         this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
         
-        //super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
+        super.fireTimedEvent(TORPEDO_LOCATION_MSG, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
         
     }
 

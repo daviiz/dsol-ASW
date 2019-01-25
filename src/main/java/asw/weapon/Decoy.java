@@ -23,6 +23,7 @@ public class Decoy extends Ball implements EventListenerInterface{
     
     private String name;
     
+    public static final EventType DECOY_LOCATION_MSG = new EventType("DECOY_LOCATION_MSG");
     
     /** the origin. */
     private CartesianPoint origin = new CartesianPoint(-200, -100, 0);
@@ -66,6 +67,10 @@ public class Decoy extends Ball implements EventListenerInterface{
         double x = this.origin.x + (this.destination.x - this.origin.x) * fraction;
         double y = this.origin.y + (this.destination.y - this.origin.y) * fraction;
         return new DirectedPoint(x, y, 0, 0.0, 0.0, this.theta);
+	}
+	public void setLocation(CartesianPoint _origin) {
+		this.origin =_origin;
+		this.destination = _origin;
 	}
 
 }

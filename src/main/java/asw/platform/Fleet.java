@@ -8,7 +8,9 @@ import javax.naming.NamingException;
 import asw.main.Ball;
 import asw.main.BallAnimation;
 import asw.main.EntityMSG;
+import asw.main.SimUtil;
 import asw.weapon.Decoy;
+import asw.weapon.Torpedo;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.logger.SimLogger;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
@@ -29,7 +31,6 @@ public class Fleet extends Ball implements EventListenerInterface{
 	
 	private static final long serialVersionUID = 5337683693470946049L;
 	
-	/** TOTAL_ORDERING_COST_EVENT is fired whenever ordering occurs. */
     public static final EventType FLEET_LOCATION_UPDATE_EVENT = new EventType("FLEET_LOCATION_UPDATE_EVENT");
     
     private String name = "";
@@ -66,6 +67,10 @@ public class Fleet extends Ball implements EventListenerInterface{
 	
 	public  Decoy _decoy2;
 	
+	public int decoyCouts = 2;
+	
+	public EntityMSG lastThreat = null;
+	
 	public Fleet(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) throws RemoteException, SimRuntimeException
     {
         super(name);
@@ -101,7 +106,12 @@ public class Fleet extends Ball implements EventListenerInterface{
     {
         this.origin = this.destination;
         //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
-        this.destination = new CartesianPoint(this.destination.x+2, this.destination.y+2, 0);
+        if(lastThreat == null) {
+        	this.destination = new CartesianPoint(this.destination.x+2, this.destination.y+2, 0);
+        }else {
+        	this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastThreat.x, lastThreat.y, 2.0,false);
+        }
+        
         this.startTime = this.simulator.getSimulatorTime();
         this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
         this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
@@ -124,8 +134,37 @@ public class Fleet extends Ball implements EventListenerInterface{
         {
 			EntityMSG tmp = (EntityMSG) event.getContent();
 			System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
-			System.out.println("=============================================");
+			
 			//fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(), this.simulator.getSimulatorTime());
+			
+			
+        }else if(event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
+        	EntityMSG tmp = (EntityMSG) event.getContent();
+        	System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
+        	double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
+        	//Õ½½¢À×´ïÌ½²â·½Î»£º200
+        	if(dis<200) {
+        		//ÊÍ·ÅÓãÀ×ÓÕ¶ü²¢ÇÒ¶ã±ÜÓãÀ×¹¥»÷
+        		if(decoyCouts == 2) {
+					try {
+						_decoy1.setLocation(this.origin);
+						this.simulator.scheduleEventRel(2.0, this, _decoy1, "fire", new Object[] {tmp});
+						decoyCouts--;
+					} catch (SimRuntimeException e) {
+						e.printStackTrace();
+					}
+				}else if (decoyCouts == 1){
+					try {
+						_decoy2.setLocation(this.origin);
+						this.simulator.scheduleEventRel(2.0, this, _decoy2, "fire", new Object[] {tmp});
+						decoyCouts--;
+					} catch (SimRuntimeException e) {
+						e.printStackTrace();
+					}
+				}
+        		lastThreat = tmp;
+        	}
+        	
         }
 	}
 	

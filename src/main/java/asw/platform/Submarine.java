@@ -2,7 +2,6 @@ package asw.platform;
 
 import java.awt.Color;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 import javax.naming.NamingException;
@@ -23,7 +22,11 @@ import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
 import nl.tudelft.simulation.language.d3.CartesianPoint;
 import nl.tudelft.simulation.language.d3.DirectedPoint;
-
+/**
+ * 
+ * @author daiwenzhi
+ *
+ */
 public class Submarine extends Ball implements EventListenerInterface{
 
 	/**
@@ -123,7 +126,7 @@ public class Submarine extends Ball implements EventListenerInterface{
         {
 			EntityMSG tmp = (EntityMSG) event.getContent();
 			System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
-			System.out.println("=============================================");
+			
 			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 			//Ç±Í§À×´ïÌ½²â·½Î»£º400
 			if(dis < 400) {

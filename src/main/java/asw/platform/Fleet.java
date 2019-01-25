@@ -97,7 +97,7 @@ public class Fleet extends Ball implements EventListenerInterface{
      * @throws RemoteException on network failure
      * @throws SimRuntimeException on simulation failure
      */
-    private void next() throws RemoteException, SimRuntimeException
+    private synchronized void next() throws RemoteException, SimRuntimeException
     {
         this.origin = this.destination;
         //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);

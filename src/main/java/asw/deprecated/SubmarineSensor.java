@@ -1,8 +1,9 @@
-package asw.platform;
+package asw.deprecated;
 
 import java.rmi.RemoteException;
 
 import asw.main.Ball;
+import asw.platform.Fleet;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;

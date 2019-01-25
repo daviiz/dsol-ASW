@@ -1,11 +1,13 @@
 package asw.platform;
 
+import java.awt.Color;
 import java.rmi.RemoteException;
 
 import javax.naming.NamingException;
 
 import asw.main.Ball;
 import asw.main.BallAnimation;
+import asw.main.EntityMSG;
 import asw.weapon.Decoy;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.logger.SimLogger;
@@ -29,6 +31,8 @@ public class Fleet extends Ball implements EventListenerInterface{
 	
 	/** TOTAL_ORDERING_COST_EVENT is fired whenever ordering occurs. */
     public static final EventType FLEET_LOCATION_UPDATE_EVENT = new EventType("FLEET_LOCATION_UPDATE_EVENT");
+    
+    private String name = "";
 
 	/** the origin. */
     private CartesianPoint origin = new CartesianPoint(-200, -100, 0);
@@ -47,33 +51,40 @@ public class Fleet extends Ball implements EventListenerInterface{
 
     /** the stream -- ugly but works. */
     private static StreamInterface stream = new MersenneTwister();
+    
+    public int belong = 1;
+    
+    public boolean status = true;
 	
-	public  FleetController _controller;
+	//public  FleetController _controller;
 	
 	//private FleetManeuver _maneuver;
 	
-	public  FleetSensor _sensor;
+	//public  FleetSensor _sensor;
 	
-	public Decoy _decoy1;
+	public  Decoy _decoy1;
 	
-	public Decoy _decoy2;
+	public  Decoy _decoy2;
 	
-	public Fleet(final DEVSSimulatorInterface.TimeDouble simulator) throws RemoteException, SimRuntimeException
+	public Fleet(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) throws RemoteException, SimRuntimeException
     {
-        super("F");
+        super(name);
+        origin = new CartesianPoint(x, y, 0);
+        destination = new CartesianPoint(x, y, 0);
         this.simulator = simulator;
+        this.name = name;
         // URL image = URLResource.getResource("/nl/tudelft/simulation/examples/dsol/animation/images/customer.jpg");
         // new SingleImageRenderable(this, simulator, image);
         
         try
         {
-            new BallAnimation(this, simulator);
+            new BallAnimation(this, simulator,Color.RED);
             
             //_maneuver = new FleetManeuver(simulator);
-            _controller = new FleetController(simulator);
-            _sensor = new FleetSensor(simulator);
-            _decoy1 = new Decoy(simulator);
-            _decoy2 = new Decoy(simulator);
+            //_controller = new FleetController(simulator);
+            //_sensor = new FleetSensor(simulator);
+            _decoy1 = new Decoy(name+"_decoy1",x,y,simulator);
+            _decoy2 = new Decoy(name+"_decoy2",x,y,simulator);
         }
         catch (NamingException exception)
         {
@@ -95,8 +106,7 @@ public class Fleet extends Ball implements EventListenerInterface{
         this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
         this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
         
-        super.fireEvent(FLEET_LOCATION_UPDATE_EVENT, new LOC(this.origin.x,this.origin.y));
-        
+        super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
         
     }
 
@@ -112,8 +122,9 @@ public class Fleet extends Ball implements EventListenerInterface{
 		
 		if (event.getType().equals(FLEET_LOCATION_UPDATE_EVENT))
         {
-			LOC tmp = (LOC) event.getContent();
-			System.out.println("Fleet current location:x="+tmp.x+", y="+tmp.y);
+			EntityMSG tmp = (EntityMSG) event.getContent();
+			System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
+			System.out.println("=============================================");
 			//fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(), this.simulator.getSimulatorTime());
         }
 	}

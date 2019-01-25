@@ -7,6 +7,7 @@ import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
 import nl.tudelft.simulation.event.EventType;
+import nl.tudelft.simulation.language.d3.CartesianPoint;
 import nl.tudelft.simulation.language.d3.DirectedPoint;
 
 /**
@@ -16,6 +17,25 @@ import nl.tudelft.simulation.language.d3.DirectedPoint;
  */
 public class Decoy extends Ball implements EventListenerInterface{
 
+	public int belong = 1;
+    
+    public boolean status = true;
+    
+    private String name;
+    
+    
+    /** the origin. */
+    private CartesianPoint origin = new CartesianPoint(-200, -100, 0);
+
+    /** the destination. */
+    private CartesianPoint destination = new CartesianPoint(-200, -100, 0);
+    
+    /** the start time. */
+    private double startTime = Double.NaN;
+
+    /** the stop time. */
+    private double stopTime = Double.NaN;
+    
 	/**
 	 * 
 	 */
@@ -26,8 +46,11 @@ public class Decoy extends Ball implements EventListenerInterface{
 	
 	public static final EventType DECOY_LOCATION_UPDATE_EVENT = new EventType("DECOY_LOCATION_UPDATE_EVENT");
 
-	public Decoy(final DEVSSimulatorInterface.TimeDouble simulator) {
-		
+	public Decoy(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) {
+		super(name);
+		this.name = name;
+        origin = new CartesianPoint(x, y, 0);
+        destination = new CartesianPoint(x, y, 0);
 		this.simulator = simulator;
 		
 	}
@@ -39,8 +62,10 @@ public class Decoy extends Ball implements EventListenerInterface{
 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {
-		// TODO Auto-generated method stub
-		return null;
+		double fraction = (this.simulator.getSimulatorTime() - this.startTime) / (this.stopTime - this.startTime);
+        double x = this.origin.x + (this.destination.x - this.origin.x) * fraction;
+        double y = this.origin.y + (this.destination.y - this.origin.y) * fraction;
+        return new DirectedPoint(x, y, 0, 0.0, 0.0, this.theta);
 	}
 
 }

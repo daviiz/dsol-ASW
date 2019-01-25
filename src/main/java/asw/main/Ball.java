@@ -58,7 +58,7 @@ public abstract class Ball extends EventProducer implements Locatable
         super();
         this.theta = 2 * Math.PI * Math.random();
         Ball.number++;
-        this.name = name + Ball.number;
+        this.name = name ;//+ Ball.number;
     }
 
     /** {@inheritDoc} */

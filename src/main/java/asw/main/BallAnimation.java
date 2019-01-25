@@ -39,10 +39,11 @@ public class BallAnimation extends Renderable2D<Locatable>
      * @throws NamingException on registration error
      * @throws RemoteException on remote animation error
      */
-    public BallAnimation(final Locatable source, final SimulatorInterface.TimeDouble simulator)
+    public BallAnimation(final Locatable source, final SimulatorInterface.TimeDouble simulator,Color _color)
             throws RemoteException, NamingException
     {
         super(source, simulator);
+        color = _color;
     }
 
     /** {@inheritDoc} */

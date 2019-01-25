@@ -1,6 +1,7 @@
 package asw.main;
 
 
+import java.awt.Color;
 import java.rmi.RemoteException;
 
 import javax.naming.NamingException;
@@ -57,7 +58,7 @@ public class DiscreteBall extends Ball
         // new SingleImageRenderable(this, simulator, image);
         try
         {
-            new BallAnimation(this, simulator);
+            new BallAnimation(this, simulator,Color.RED);
         }
         catch (NamingException exception)
         {

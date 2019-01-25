@@ -1,11 +1,16 @@
 package asw.platform;
 
+import java.awt.Color;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import javax.naming.NamingException;
 
 import asw.main.Ball;
 import asw.main.BallAnimation;
+import asw.main.EntityMSG;
+import asw.main.SimUtil;
 import asw.weapon.Torpedo;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.logger.SimLogger;
@@ -29,6 +34,7 @@ public class Submarine extends Ball implements EventListenerInterface{
 	/** TOTAL_ORDERING_COST_EVENT is fired whenever ordering occurs. */
     public static final EventType SUBMARINE_LOCATION_UPDATE_EVENT = new EventType("SUBMARINE_LOCATION_UPDATE_EVENT");
 
+    private String name;
 
 	/** the origin. */
     private CartesianPoint origin = new CartesianPoint(200, 100, 0);
@@ -47,20 +53,26 @@ public class Submarine extends Ball implements EventListenerInterface{
 
     /** the stream -- ugly but works. */
     private static StreamInterface stream = new MersenneTwister();
+    
+    public int belong = -1;
+    
+    public boolean status = true;
 	
-	public  SubmarineController _controller;
+	public Torpedo _t1 = null;;
+	public Torpedo _t2 = null;
 	
-	//private SubmarineManeuver _maneuver;
+	private int weaponCounts = 0;
 	
-	public  SubmarineSensor _sensor;
+	private HashMap<String, String> LockedTarget = new HashMap<String, String>();
 	
-	public Torpedo _t1;
+	//public Torpedo _t2;
 	
-	public Torpedo _t2;
-	
-	public Submarine(final DEVSSimulatorInterface.TimeDouble simulator) throws RemoteException, SimRuntimeException
+	public Submarine(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) throws RemoteException, SimRuntimeException
     {
-        super("S");
+		super(name);
+		this.name = name;
+        origin = new CartesianPoint(x, y, 0);
+        destination = new CartesianPoint(x, y, 0);
         this.simulator = simulator;
         // URL image = URLResource.getResource("/nl/tudelft/simulation/examples/dsol/animation/images/customer.jpg");
         // new SingleImageRenderable(this, simulator, image);
@@ -68,13 +80,12 @@ public class Submarine extends Ball implements EventListenerInterface{
         
         try
         {
-            new BallAnimation(this, simulator);
+            new BallAnimation(this, simulator,Color.BLUE);
             
             //_maneuver = new SubmarineManeuver(simulator);
-            _controller = new SubmarineController(simulator);
-            _sensor = new SubmarineSensor(simulator);
-            _t1 = new Torpedo(simulator);
-            _t2 = new Torpedo(simulator);
+            _t1 = new Torpedo(name+"_torpedo1",x,y,simulator);
+            _t2 = new Torpedo(name+"_torpedo2",x,y,simulator);
+            weaponCounts = 2;
         }
         catch (NamingException exception)
         {
@@ -108,7 +119,41 @@ public class Submarine extends Ball implements EventListenerInterface{
 	}
 	@Override
 	public void notify(EventInterface event) throws RemoteException {
-		// TODO Auto-generated method stub
+		if (event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT))
+        {
+			EntityMSG tmp = (EntityMSG) event.getContent();
+			System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
+			System.out.println("=============================================");
+			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
+			//潜艇雷达探测方位：400
+			if(dis < 400) {
+				//释放鱼雷：打击目标，且目标已经之前没有被锁定
+				if(!LockedTarget.containsKey(tmp.name)) {
+					if(weaponCounts == 2) {
+						try {
+							_t1.setLocation(this.origin);
+							this.simulator.scheduleEventRel(2.0, this, _t1, "fire", new Object[] {tmp});
+							weaponCounts--;
+							LockedTarget.put(tmp.name, tmp.name);
+						} catch (SimRuntimeException e) {
+							e.printStackTrace();
+						}
+					}else if (weaponCounts == 1){
+						try {
+							_t2.setLocation(this.origin);
+							this.simulator.scheduleEventRel(2.0, this, _t2, "fire", new Object[] {tmp});
+							LockedTarget.put(tmp.name, tmp.name);
+							weaponCounts--;
+						} catch (SimRuntimeException e) {
+							e.printStackTrace();
+						}
+					}else {
+						//逃逸--朝与目标相反方向运动：
+					}
+				}
+			}
+			//fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(), this.simulator.getSimulatorTime());
+        }
 		
 	}
 

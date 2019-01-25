@@ -10,6 +10,7 @@ import asw.main.BallAnimation;
 import asw.main.EntityMSG;
 import asw.main.SimUtil;
 import asw.platform.Fleet;
+import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
@@ -69,20 +70,38 @@ public class Torpedo extends Ball implements EventListenerInterface{
 					this.origin = this.destination;
 			        //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
 			        this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, tmp.x, tmp.y, 4.0,true);
-			        this.startTime = this.simulator.getSimulatorTime();
-			        this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+			        //this.startTime = this.simulator.getSimulatorTime();
+			        //this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
 				}
 			}
 			
 		}
 	}
 	//鱼雷被发射：鱼雷的速度为4；
-	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException {
+	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
 		isFired = true;
 		target = object.name;
 		new BallAnimation(this, this.simulator, Color.YELLOW);
+		next();
 	}
 	
+	/**
+     * next movement.
+     * @throws RemoteException on network failure
+     * @throws SimRuntimeException on simulation failure
+     */
+    private void next() throws RemoteException, SimRuntimeException
+    {
+        //this.origin = this.destination;
+        //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
+        //this.destination = new CartesianPoint(this.destination.x+4, this.destination.y+4, 0);
+        this.startTime = this.simulator.getSimulatorTime();
+        this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+        this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
+        
+        //super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
+        
+    }
 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {

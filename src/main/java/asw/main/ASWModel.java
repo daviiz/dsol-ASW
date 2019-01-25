@@ -5,7 +5,6 @@ import java.rmi.RemoteException;
 
 import asw.platform.Fleet;
 import asw.platform.Submarine;
-import asw.weapon.Decoy;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
 import nl.tudelft.simulation.dsol.logger.SimLogger;
 import nl.tudelft.simulation.dsol.model.AbstractDSOLModel;

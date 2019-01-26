@@ -77,7 +77,7 @@ public class Decoy extends Ball implements EventListenerInterface{
 	        	EntityMSG tmp = (EntityMSG) event.getContent();
 	        	System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
 	        	double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-	        	//战舰雷达探测方位：100
+	        	//战舰雷达探测范围：100
 	        	if(dis<100) {
 	        		lastThreat = tmp;
 	        	}

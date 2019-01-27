@@ -123,12 +123,13 @@ public class Decoy extends Ball implements EventListenerInterface{
     	else if(lastThreat == null) {
         	//this.destination = new CartesianPoint(this.destination.x, this.destination.y, 0);
         }else {
-        	this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastThreat.x, lastThreat.y, 2.0,true);
+        	this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastThreat.x, lastThreat.y, 2.0,false);
         }
         this.startTime = this.simulator.getSimulatorTime();
         this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
         this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
-        super.fireTimedEvent(DECOY_LOCATION_MSG, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
+        if(!isDead)
+        	super.fireTimedEvent(DECOY_LOCATION_MSG, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
         
     }
     private synchronized void destroy() {

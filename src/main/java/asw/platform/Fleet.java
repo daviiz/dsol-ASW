@@ -73,9 +73,9 @@ public class Fleet extends Ball implements EventListenerInterface {
 
 	private BallAnimation visualComponent = null;
 
-	private volatile  boolean isDead = false;
-	
-	private int aswPolicy = 2; //1: Õ∑≈”„¿◊”’∂¸ £ª2£¨÷ª «Ã”“›
+	private volatile boolean isDead = false;
+
+	private int aswPolicy = 1; // 1: Õ∑≈”„¿◊”’∂¸ £ª2£¨÷ª «Ã”“›
 
 	public Fleet(String name, double x, double y, final DEVSSimulatorInterface.TimeDouble simulator)
 			throws RemoteException, SimRuntimeException {
@@ -112,30 +112,29 @@ public class Fleet extends Ball implements EventListenerInterface {
 	 * @throws SimRuntimeException on simulation failure
 	 */
 	private synchronized void next() throws RemoteException, SimRuntimeException {
-			if (visualComponent == null) {
-				try {
-					visualComponent = new BallAnimation(this, simulator, Color.RED);
-				} catch (NamingException e) {
-					e.printStackTrace();
-				}
+		if (visualComponent == null) {
+			try {
+				visualComponent = new BallAnimation(this, simulator, Color.RED);
+			} catch (NamingException e) {
+				e.printStackTrace();
 			}
-			this.origin = this.destination;
-			// this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 +
-			// stream.nextInt(0, 200), 0);
-			if (isDead) {
-				this.destination = new CartesianPoint(this.destination.x , this.destination.y , 0);
-			}
-			else if (lastThreat == null) {
-				this.destination = new CartesianPoint(this.destination.x + 2, this.destination.y + 2, 0);
-			} else {
-				this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastThreat.x, lastThreat.y, 2.0,
-						false);
-			}
+		}
+		this.origin = this.destination;
+		// this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 +
+		// stream.nextInt(0, 200), 0);
+		if (isDead) {
+			this.destination = new CartesianPoint(this.destination.x, this.destination.y, 0);
+		} else if (lastThreat == null) {
+			this.destination = new CartesianPoint(this.destination.x + 2, this.destination.y + 2, 0);
+		} else {
+			this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastThreat.x, lastThreat.y, 2.0, false);
+		}
 
-			this.startTime = this.simulator.getSimulatorTime();
-			this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+		this.startTime = this.simulator.getSimulatorTime();
+		this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
 
-			this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
+		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
+		if (!isDead)
 			super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT,
 					new EntityMSG(name, belong, status, this.origin.x, this.origin.y),
 					this.simulator.getSimTime().plus(2.0));
@@ -153,49 +152,51 @@ public class Fleet extends Ball implements EventListenerInterface {
 	@Override
 	public synchronized void notify(final EventInterface event) throws RemoteException {
 		if (!isDead) {
-		if (event.getType().equals(FLEET_LOCATION_UPDATE_EVENT)) {
-			EntityMSG tmp = (EntityMSG) event.getContent();
-			System.out.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
+			if (event.getType().equals(FLEET_LOCATION_UPDATE_EVENT)) {
+				EntityMSG tmp = (EntityMSG) event.getContent();
+				System.out
+						.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
 
-			// fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(),
-			// this.simulator.getSimulatorTime());
+				// fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(),
+				// this.simulator.getSimulatorTime());
 
-		} else if (event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
-			EntityMSG tmp = (EntityMSG) event.getContent();
-			System.out.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
-			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
+			} else if (event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
+				EntityMSG tmp = (EntityMSG) event.getContent();
+				System.out
+						.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
+				double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 
-			// ’ΩΩ¢¿◊¥ÔÃΩ≤‚∑ΩŒª£∫200
-			if (dis < 200) {
-				if(aswPolicy == 1) {
-					//  Õ∑≈”„¿◊”’∂¸≤¢«“∂„±‹”„¿◊π•ª˜
-	        		if(decoyCouts == 2) {
-						try {
-							_decoy1.setLocation(this.origin);
-							this.simulator.scheduleEventRel(20.0, this, _decoy1, "fire", new Object[] {tmp});
-							decoyCouts--;
-						} catch (SimRuntimeException e) {
-							e.printStackTrace();
-						}
-					}else if (decoyCouts == 1){
-						try {
-							_decoy2.setLocation(this.origin);
-							this.simulator.scheduleEventRel(120.0, this, _decoy2, "fire", new Object[] {tmp});
-							decoyCouts--;
-						} catch (SimRuntimeException e) {
-							e.printStackTrace();
+				// ’ΩΩ¢¿◊¥ÔÃΩ≤‚∑ΩŒª£∫200
+				if (dis < 200) {
+					if (aswPolicy == 1) {
+						//  Õ∑≈”„¿◊”’∂¸≤¢«“∂„±‹”„¿◊π•ª˜
+						if (decoyCouts == 2) {
+							try {
+								_decoy1.setLocation(this.origin);
+								this.simulator.scheduleEventRel(20.0, this, _decoy1, "fire", new Object[] { tmp });
+								decoyCouts--;
+							} catch (SimRuntimeException e) {
+								e.printStackTrace();
+							}
+						} else if (decoyCouts == 1) {
+							try {
+								_decoy2.setLocation(this.origin);
+								this.simulator.scheduleEventRel(120.0, this, _decoy2, "fire", new Object[] { tmp });
+								decoyCouts--;
+							} catch (SimRuntimeException e) {
+								e.printStackTrace();
+							}
 						}
 					}
+					lastThreat = tmp;
+					if (dis < 20) {
+						visualComponent.setColor(Color.BLACK);
+						isDead = true;
+					}
 				}
-				lastThreat = tmp;
-				if (dis < 20) {
-					visualComponent.setColor(Color.BLACK);
-					isDead = true;
-				}
-			}
 
+			}
 		}
-	}
 	}
 
 }

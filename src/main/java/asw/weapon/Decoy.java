@@ -61,6 +61,10 @@ public class Decoy extends Ball implements EventListenerInterface{
 	
 	/** the simulator. */
     private DEVSSimulatorInterface.TimeDouble simulator = null;
+    
+    private volatile  boolean isDead = false;
+    
+    private BallAnimation visualComponent = null;
 	
 	public Decoy(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) {
 		super(name);
@@ -72,7 +76,7 @@ public class Decoy extends Ball implements EventListenerInterface{
 	}
 	@Override
 	public void notify(EventInterface event) throws RemoteException {
-		if(isFired) {
+		if(isFired && (!isDead)) {
 			if(event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
 	        	EntityMSG tmp = (EntityMSG) event.getContent();
 	        	System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
@@ -80,6 +84,10 @@ public class Decoy extends Ball implements EventListenerInterface{
 	        	//Õ½½¢À×´ïÌ½²â·¶Î§£º100
 	        	if(dis<100) {
 	        		lastThreat = tmp;
+	        		if (dis < 20) {
+						visualComponent.setColor(Color.BLACK);
+						isDead = true;
+					}
 	        	}
 	        	
 	        }
@@ -91,22 +99,28 @@ public class Decoy extends Ball implements EventListenerInterface{
 		isFired = true;
 		//lastThreat = null;
 		lastThreat = object;
-		new BallAnimation(this, this.simulator, Color.GREEN);
+		
 		next();
 	}
 	/**
      * next movement.
      * @throws RemoteException on network failure
      * @throws SimRuntimeException on simulation failure
+	 * @throws NamingException 
      */
-    private synchronized void next() throws RemoteException, SimRuntimeException
+    private synchronized void next() throws RemoteException, SimRuntimeException, NamingException
     {
-    	
+    	if(visualComponent== null) {
+    		visualComponent = new BallAnimation(this, this.simulator, Color.GREEN);
+    	}
         
     	this.origin = this.destination;
         //this.destination = new CartesianPoint(-100 + stream.nextInt(0, 200), -100 + stream.nextInt(0, 200), 0);
         //this.destination = new CartesianPoint(this.destination.x+4, this.destination.y+4, 0);
-    	if(lastThreat == null) {
+    	if(isDead) {
+    		this.destination = new CartesianPoint(this.destination.x, this.destination.y, 0);
+    	}
+    	else if(lastThreat == null) {
         	//this.destination = new CartesianPoint(this.destination.x, this.destination.y, 0);
         }else {
         	this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastThreat.x, lastThreat.y, 2.0,true);

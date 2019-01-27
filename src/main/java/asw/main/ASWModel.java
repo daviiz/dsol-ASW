@@ -82,8 +82,17 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             
             s1._t1.addListener(f1, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t1.addListener(f2, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t1.addListener(f1._decoy1, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t1.addListener(f1._decoy2, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t1.addListener(f2._decoy1, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t1.addListener(f2._decoy2, Torpedo.TORPEDO_LOCATION_MSG);
+            
             s1._t2.addListener(f1, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t2.addListener(f2, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t2.addListener(f1._decoy1, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t2.addListener(f1._decoy2, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t2.addListener(f2._decoy1, Torpedo.TORPEDO_LOCATION_MSG);
+            s1._t2.addListener(f2._decoy2, Torpedo.TORPEDO_LOCATION_MSG);
             
             f1._decoy1.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
             f1._decoy1.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);

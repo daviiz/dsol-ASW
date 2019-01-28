@@ -140,10 +140,9 @@ public class Fleet extends Ball implements EventListenerInterface {
 		this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
 
 		this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
-		if (!isDead)
-			super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT,
-					new EntityMSG(name, belong, status, this.origin.x, this.origin.y),
-					this.simulator.getSimTime().plus(2.0));
+		super.fireTimedEvent(FLEET_LOCATION_UPDATE_EVENT,
+				new EntityMSG(name, belong, status, this.origin.x, this.origin.y),
+				this.simulator.getSimTime().plus(2.0));
 
 	}
 
@@ -160,16 +159,14 @@ public class Fleet extends Ball implements EventListenerInterface {
 		if (!isDead) {
 			if (event.getType().equals(FLEET_LOCATION_UPDATE_EVENT)) {
 				EntityMSG tmp = (EntityMSG) event.getContent();
-				System.out
-						.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
+				//System.out.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
 
 				// fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(),
 				// this.simulator.getSimulatorTime());
 
 			} else if (event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
 				EntityMSG tmp = (EntityMSG) event.getContent();
-				System.out
-						.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
+				//System.out.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
 				double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 
 				if (dis < detectRange) {
@@ -196,6 +193,7 @@ public class Fleet extends Ball implements EventListenerInterface {
 					if (dis < 20) {
 						visualComponent.setColor(Color.BLACK);
 						isDead = true;
+						status = false;
 					}
 				}
 

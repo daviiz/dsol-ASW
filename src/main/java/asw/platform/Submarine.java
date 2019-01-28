@@ -129,7 +129,7 @@ public class Submarine extends Ball implements EventListenerInterface{
 		if (event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT))
         {
 			EntityMSG tmp = (EntityMSG) event.getContent();
-			System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
+			//System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
 			
 			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 			if(dis < detectRange) {
@@ -149,7 +149,8 @@ public class Submarine extends Ball implements EventListenerInterface{
 						} catch (SimRuntimeException e) {
 							e.printStackTrace();
 						}
-					}else if (weaponCounts == 1){
+					}
+					else if (weaponCounts == 1){
 						try {
 							_t2.setLocation(this.origin);
 							this.simulator.scheduleEventRel(2.0, this, _t2, "fire", new Object[] {tmp});
@@ -158,7 +159,8 @@ public class Submarine extends Ball implements EventListenerInterface{
 						} catch (SimRuntimeException e) {
 							e.printStackTrace();
 						}
-					}else {
+					}
+					else {
 						//逃逸
 					}
 				}

@@ -5,7 +5,7 @@ import nl.tudelft.simulation.language.d3.CartesianPoint;
 public class SimUtil {
 	
 	/**
-	 * 计算距离
+	 * 
 	 * @param src_x
 	 * @param src_y
 	 * @param des_x
@@ -18,13 +18,13 @@ public class SimUtil {
 		return tmp;
 	}
 	/**
-	 * 根据速度和起始点计算实体下一帧的位置,跟随
+	 * 
 	 * @param src_x
 	 * @param src_y
 	 * @param des_x
 	 * @param des_y
 	 * @param _speed
-	 * @param isFllow 是否跟随，true代表跟随，false代表逃逸、远离
+	 * @param isFllow
 	 * @return
 	 */
 	public static CartesianPoint nextPoint(double src_x,double src_y,double des_x,double des_y,double _speed,boolean isFllow) {

@@ -84,14 +84,14 @@ public class Decoy extends Ball implements EventListenerInterface{
 		if(isFired && (!isDead)) {
 			if(event.getType().equals(Torpedo.TORPEDO_LOCATION_MSG)) {
 	        	EntityMSG tmp = (EntityMSG) event.getContent();
-	        	System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
+	        	//System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
 	        	double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-	        	//ս���״�̽�ⷶΧ��100
 	        	if(dis<100) {
 	        		lastThreat = tmp;
 	        		if (dis < 20) {
 						visualComponent.setColor(Color.BLACK);
 						isDead = true;
+						status = false;
 					}
 	        	}
 	        	
@@ -139,8 +139,8 @@ public class Decoy extends Ball implements EventListenerInterface{
         this.startTime = this.simulator.getSimulatorTime();
         this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
         this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
-        if(!isDead)
-        	super.fireTimedEvent(DECOY_LOCATION_MSG, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
+       
+        super.fireTimedEvent(DECOY_LOCATION_MSG, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
         
     }
 

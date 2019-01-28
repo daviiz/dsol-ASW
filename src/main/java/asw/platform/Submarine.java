@@ -133,8 +133,7 @@ public class Submarine extends Ball implements EventListenerInterface{
 			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 			//Ç±Í§À×´ïÌ½²â·¶Î§£º400
 			if(dis < 400) {
-				
-				Circle.intersection(new Point2D.Double(this.origin.x, this.origin.y), 400, new Point2D.Double(tmp.x, tmp.y), 400);
+				//Circle.intersection(new Point2D.Double(this.origin.x, this.origin.y), 400, new Point2D.Double(tmp.x, tmp.y), 400);
 				//DirectionalLine dl = new DirectionalLine(this.origin.x, this.origin.y, tmp.x, tmp.y);
 				ld.x1 = (int)this.origin.x;
 				ld.y1 = (int)this.origin.y;

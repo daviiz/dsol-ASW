@@ -83,6 +83,7 @@ public class Torpedo extends Ball implements EventListenerInterface{
 					ld.x2 = (int)tmp.x; 
 					ld.y2 = (int)tmp.y;
 					lastTarget = tmp;
+					lastDistance = tmpL;
 				}else {
 					ld.x1 = 0;
 					ld.y1 = 0;

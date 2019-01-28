@@ -6,24 +6,24 @@ public class EntityMSG implements java.io.Serializable{
 	 */
 	private static final long serialVersionUID = 230299176521011753L;
 	/**
-	 * Êô·½£º1£ººì·½£¬-1 £ºÀ¶·½£¬ 0£ºÖĞÁ¢·½
+	 * çº¢è“æ–¹å½’å±ï¼š1 çº¢æ–¹ï¼Œ0 ä¸­ç«‹æ–¹ï¼Œ-1 è“æ–¹
 	 */
 	public int belong; 
 	/**
-	 * ×´Ì¬£ºtrue:Éú´æ£¬false:ÕóÍö
+	 * ç”Ÿå­˜çŠ¶æ€ï¼š true ç”Ÿå­˜ï¼Œfalse é˜µäº¡
 	 */
 	public boolean status; 
 	/**
-	 * Î»ÖÃĞÅÏ¢ -x
+	 * æ¨¡å‹å®ä½“ä½ç½® -x
 	 */
 	public double x;
 	/**
-	 * Î»ÖÃĞÅÏ¢ -y
+	 * æ¨¡å‹å®ä½“ä½ç½® -y
 	 */
 	public double y;
 	
 	/**
-	 * ÊµÌåÃû³Æ
+	 * æ¨¡å‹å®ä½“åç§°
 	 */
 	public String name;
 	

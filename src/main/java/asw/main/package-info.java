@@ -1,6 +1,6 @@
 package asw.main;
 /**
- * A model with 2D animation; positions provided by a DEVS model with discrete updates.
+ * Anti-Submarine-Warfare model
  * <p>
  * Copyright (c) 2002-2019 Delft University of Technology, Jaffalaan 5, 2628 BX Delft, the Netherlands. All rights reserved. See
  * for project information <a href="https://simulation.tudelft.nl/" target="_blank"> https://simulation.tudelft.nl</a>. The DSOL

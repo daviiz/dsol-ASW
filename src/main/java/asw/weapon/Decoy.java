@@ -21,11 +21,16 @@ import nl.tudelft.simulation.language.d3.CartesianPoint;
 import nl.tudelft.simulation.language.d3.DirectedPoint;
 
 /**
- *  ÓãÀ×ÓÕ¶ü£¬¼ò»¯´¦Àí Ê©·Åºó²»¶¯
+ *  é±¼é›·è¯±é¥µæ¨¡åž‹
  * @author daiwenzhi
  *
  */
 public class Decoy extends Ball implements EventListenerInterface{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1020956635649196808L;
 
 	public int belong = 1;
     
@@ -53,11 +58,6 @@ public class Decoy extends Ball implements EventListenerInterface{
     
     /** the stream -- ugly but works. */
     private static StreamInterface stream = new MersenneTwister();
-    
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 1123053440800621212L;
 	
 	/** the simulator. */
     private DEVSSimulatorInterface.TimeDouble simulator = null;
@@ -65,6 +65,11 @@ public class Decoy extends Ball implements EventListenerInterface{
     private volatile  boolean isDead = false;
     
     private BallAnimation visualComponent = null;
+    
+    /**
+	 * é›·è¾¾æŽ¢æµ‹èŒƒå›´
+	 */
+	private double detectRange = 100;
 	
 	public Decoy(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) {
 		super(name);
@@ -81,7 +86,7 @@ public class Decoy extends Ball implements EventListenerInterface{
 	        	EntityMSG tmp = (EntityMSG) event.getContent();
 	        	System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
 	        	double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-	        	//Õ½½¢À×´ïÌ½²â·¶Î§£º100
+	        	//Õ½ï¿½ï¿½ï¿½×´ï¿½Ì½ï¿½â·¶Î§ï¿½ï¿½100
 	        	if(dis<100) {
 	        		lastThreat = tmp;
 	        		if (dis < 20) {
@@ -94,7 +99,13 @@ public class Decoy extends Ball implements EventListenerInterface{
 		}
 		
 	}
-	//ÓãÀ×±»·¢Éä£ºÓãÀ×µÄËÙ¶ÈÎª4£»
+	/**
+	 * é±¼é›·è¯±é¥µæ–½æ”¾
+	 * @param object
+	 * @throws RemoteException
+	 * @throws NamingException
+	 * @throws SimRuntimeException
+	 */
 	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
 		isFired = true;
 		//lastThreat = null;
@@ -111,7 +122,7 @@ public class Decoy extends Ball implements EventListenerInterface{
     private synchronized void next() throws RemoteException, SimRuntimeException, NamingException
     {
     	if(visualComponent== null) {
-    		visualComponent = new BallAnimation(this, this.simulator, Color.GREEN,100,null);
+    		visualComponent = new BallAnimation(this, this.simulator, Color.GREEN,(int)detectRange,null);
     	}
         
     	this.origin = this.destination;
@@ -132,9 +143,6 @@ public class Decoy extends Ball implements EventListenerInterface{
         	super.fireTimedEvent(DECOY_LOCATION_MSG, new EntityMSG(name,belong,status,this.origin.x,this.origin.y),this.simulator.getSimTime().plus(2.0));
         
     }
-    private synchronized void destroy() {
-    	System.out.println("");
-    }
 
 	@Override
 	public DirectedPoint getLocation() throws RemoteException {
@@ -143,6 +151,7 @@ public class Decoy extends Ball implements EventListenerInterface{
         double y = this.origin.y + (this.destination.y - this.origin.y) * fraction;
         return new DirectedPoint(x, y, 0, 0.0, 0.0, this.theta);
 	}
+	
 	public void setLocation(CartesianPoint _origin) {
 		this.origin =_origin;
 		this.destination = _origin;

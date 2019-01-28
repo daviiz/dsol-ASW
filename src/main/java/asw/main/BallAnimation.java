@@ -4,22 +4,14 @@ package asw.main;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.rmi.RemoteException;
 
-import javax.media.j3d.BoundingSphere;
 import javax.naming.NamingException;
-import javax.vecmath.Point3d;
 
 import nl.tudelft.simulation.dsol.animation.Locatable;
 import nl.tudelft.simulation.dsol.animation.D2.Renderable2D;
-import nl.tudelft.simulation.dsol.animation.D2.Renderable2DInterface;
 import nl.tudelft.simulation.dsol.simulators.SimulatorInterface;
-import nl.tudelft.simulation.language.d2.Shape;
-import nl.tudelft.simulation.language.d3.BoundsUtil;
-import nl.tudelft.simulation.language.d3.DirectedPoint;
 
 /**
  * The Animation of a Ball.

@@ -26,7 +26,12 @@ import nl.tudelft.simulation.language.d3.DirectedPoint;
  */
 public class DiscreteBall extends Ball
 {
-    /** the origin. */
+    /**
+	 * 
+	 */
+	private static final long serialVersionUID = -1302997897049704072L;
+
+	/** the origin. */
     private CartesianPoint origin = new CartesianPoint(0, 0, 0);
 
     /** the destination. */

@@ -51,8 +51,8 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             
             s1 = new Submarine("Sub1",200,100,this.simulator);
             
-            //·¢ËÍ·½ .addListener ½ÓÊÕ·½
-            //Õ½½¢1Ä£ÐÍÊµÌåÏûÏ¢¸üÐÂ£º
+            //å‘å¸ƒæ–¹ .addListener è®¢é˜…æ–¹
+            //æˆ˜èˆ°1 æ¶ˆæ¯å‘å¸ƒ
             f1.addListener(f1._decoy1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f1.addListener(f1._decoy2, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f1.addListener(f2, Fleet.FLEET_LOCATION_UPDATE_EVENT);
@@ -61,7 +61,7 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             f1.addListener(s1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f1.addListener(s1._t1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f1.addListener(s1._t2, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //Õ½½¢2Ä£ÐÍÊµÌåÏûÏ¢¸üÐÂ£º
+            //æˆ˜èˆ°2 æ¶ˆæ¯å‘å¸ƒ
             f2.addListener(f2._decoy1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f2.addListener(f2._decoy2, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f2.addListener(f1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
@@ -70,7 +70,7 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             f2.addListener(s1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f2.addListener(s1._t1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f2.addListener(s1._t2, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //Ç±Í§1Ä£ÐÍÊµÌåÏûÏ¢¸üÐÂ£º
+            //æ½œè‰‡1 æ¶ˆæ¯å‘å¸ƒ
             s1.addListener(f2, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
             s1.addListener(f2._decoy1, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
             s1.addListener(f2._decoy2, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
@@ -79,7 +79,7 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             s1.addListener(f1._decoy2, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
             s1.addListener(s1._t1, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
             s1.addListener(s1._t2, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
-            
+            //æ½œè‰‡é™„å¸¦é±¼é›· æ¶ˆæ¯å‘å¸ƒ
             s1._t1.addListener(f1, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t1.addListener(f2, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t1.addListener(f1._decoy1, Torpedo.TORPEDO_LOCATION_MSG);
@@ -93,42 +93,16 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             s1._t2.addListener(f1._decoy2, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t2.addListener(f2._decoy1, Torpedo.TORPEDO_LOCATION_MSG);
             s1._t2.addListener(f2._decoy2, Torpedo.TORPEDO_LOCATION_MSG);
-            
+            //æˆ˜èˆ°1é™„å¸¦é±¼é›·è¯±é¥µ æ¶ˆæ¯å‘å¸ƒ
             f1._decoy1.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
             f1._decoy1.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
             f1._decoy2.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
             f1._decoy2.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
-            
+            //æˆ˜èˆ°1é™„å¸¦é±¼é›·è¯±é¥µ æ¶ˆæ¯å‘å¸ƒ
             f2._decoy1.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
             f2._decoy1.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
             f2._decoy2.addListener(s1._t1, Decoy.DECOY_LOCATION_MSG);
             f2._decoy2.addListener(s1._t2, Decoy.DECOY_LOCATION_MSG);
-
-            
-            
-            ///////////////////Æ½Ì¨ÊµÌåÄ£ÐÍÖ®¼äÏûÏ¢·¢²¼-¶©ÔÄ/////////////////////////////////////////////////
-            //·¢ËÍ·½ .addListener ½ÓÊÕ·½
-            //f1.addListener(f2._sensor, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //f1.addListener(s1._sensor, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //f1.addListener(s1._t1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //f1.addListener(s1._t2, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            
-            //f2.addListener(f1._sensor, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //f2.addListener(s1._sensor, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //f2.addListener(s1._t1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            //f2.addListener(s1._t2, Fleet.FLEET_LOCATION_UPDATE_EVENT);
-            
-            //s1.addListener(f1._sensor, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
-            //s1.addListener(f2._sensor, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
-            //s1.addListener(f1._decoy1, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
-            //s1.addListener(f1._decoy2, Submarine.SUBMARINE_LOCATION_UPDATE_EVENT);
-            
-        	///////////////////Æ½Ì¨Ä£ÐÍÄÚ²¿ÏûÏ¢·¢²¼-¶©ÔÄ/////////////////////////////////////////////////
-            //f1._sensor.addListener(f1._controller, FleetSensor.DETECT_ENTITY_MSG);
-            //f1._controller.addListener(f1, FleetController.DECISION_MSG);
-            
-            ///////////////////ÎäÆ÷ÏµÍ³Ä£ÐÍÏûÏ¢·¢²¼-¶©ÔÄ/////////////////////////////////////////////////
-            
             
         }
         catch (RemoteException exception)

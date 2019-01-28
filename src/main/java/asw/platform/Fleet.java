@@ -74,7 +74,13 @@ public class Fleet extends Ball implements EventListenerInterface {
 
 	private volatile boolean isDead = false;
 
-	private int aswPolicy = 1; // 1:ÊÍ·ÅÓãÀ×ÓÕ¶ü £»2£¬Ö»ÊÇÌÓÒÝ
+	// aswç­–ç•¥è®¾ç½®ï¼š1ï¼šæ–½æ”¾é±¼é›·å¹¶é€ƒé€¸ï¼›2:é€ƒé€¸
+	private int aswPolicy = 1; 
+	
+	/**
+	 * æˆ˜èˆ°é›·è¾¾æŽ¢æµ‹èŒƒå›´
+	 */
+	private double detectRange = 200;
 
 	public Fleet(String name, double x, double y, final DEVSSimulatorInterface.TimeDouble simulator)
 			throws RemoteException, SimRuntimeException {
@@ -83,6 +89,7 @@ public class Fleet extends Ball implements EventListenerInterface {
 		destination = new CartesianPoint(x, y, 0);
 		this.simulator = simulator;
 		this.name = name;
+		detectRange = 200;
 		// URL image =
 		// URLResource.getResource("/nl/tudelft/simulation/examples/dsol/animation/images/customer.jpg");
 		// new SingleImageRenderable(this, simulator, image);
@@ -113,7 +120,7 @@ public class Fleet extends Ball implements EventListenerInterface {
 	private synchronized void next() throws RemoteException, SimRuntimeException {
 		if (visualComponent == null) {
 			try {
-				visualComponent = new BallAnimation(this, simulator, Color.RED,200,null);
+				visualComponent = new BallAnimation(this, simulator, Color.RED,(int)detectRange,null);
 			} catch (NamingException e) {
 				e.printStackTrace();
 			}
@@ -165,10 +172,8 @@ public class Fleet extends Ball implements EventListenerInterface {
 						.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
 				double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 
-				// Õ½½¢À×´ïÌ½²â·¶Î§£º200
-				if (dis < 200) {
+				if (dis < detectRange) {
 					if (aswPolicy == 1) {
-						// ÊÍ·ÅÓãÀ×ÓÕ¶ü²¢ÇÒ¶ã±ÜÓãÀ×¹¥»÷
 						if (decoyCouts == 2) {
 							try {
 								_decoy1.setLocation(this.origin);

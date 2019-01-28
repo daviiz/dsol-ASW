@@ -70,7 +70,10 @@ public class Submarine extends Ball implements EventListenerInterface{
 	
 	private volatile LineData ld = new LineData(0,0,0,0);
 	
-	//public Torpedo _t2;
+	/**
+	 * é›·è¾¾æŽ¢æµ‹èŒƒå›´
+	 */
+	private double detectRange = 400;
 	
 	public Submarine(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) throws RemoteException, SimRuntimeException
     {
@@ -87,7 +90,7 @@ public class Submarine extends Ball implements EventListenerInterface{
         
         try
         {
-            new BallAnimation(this, simulator,Color.BLUE,400,ld);
+            new BallAnimation(this, simulator,Color.BLUE,(int)detectRange,ld);
             //_maneuver = new SubmarineManeuver(simulator);
             
         }
@@ -129,14 +132,13 @@ public class Submarine extends Ball implements EventListenerInterface{
 			System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
 			
 			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-			//Ç±Í§À×´ïÌ½²â·¶Î§£º400
-			if(dis < 400) {
-				//ÓÃÓÚ»æÖÆÍ¨ÐÅÏß£º
+			if(dis < detectRange) {
+				//è®¾ç½®é€šä¿¡çº¿æ•°æ®
 				ld.x1 = (int)this.origin.x;
 				ld.y1 = (int)this.origin.y;
 				ld.x2 = (int)tmp.x; 
 				ld.y2 = (int)tmp.y;
-				//ÊÍ·ÅÓãÀ×£º´ò»÷Ä¿±ê£¬ÇÒÄ¿±êÖ®Ç°Ã»ÓÐ±»Ëø¶¨
+				//æ–½æ”¾é±¼é›·ï¼Œå¯¹åŒä¸€ç›®æ ‡ä»…æ–½æ”¾ä¸€ä¸ªé±¼é›·
 				if(!LockedTarget.containsKey(tmp.name)) {
 					if(weaponCounts == 2) {
 						try {
@@ -157,7 +159,7 @@ public class Submarine extends Ball implements EventListenerInterface{
 							e.printStackTrace();
 						}
 					}else {
-						//ÌÓÒÝ--³¯ÓëÄ¿±êÏà·´·½ÏòÔË¶¯£º
+						//é€ƒé€¸
 					}
 				}
 			}

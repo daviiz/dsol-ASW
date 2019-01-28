@@ -63,6 +63,11 @@ public class Torpedo extends Ball implements EventListenerInterface{
     private double lastDistance = 400;
     
     private volatile LineData ld = new LineData(0,0,0,0);
+    
+    /**
+	 * é›·è¾¾æŽ¢æµ‹èŒƒå›´
+	 */
+	private double detectRange = 100;
 
 	public Torpedo(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) {
 		super(name);
@@ -81,7 +86,7 @@ public class Torpedo extends Ball implements EventListenerInterface{
 			
 			if(event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT) || event.getType().equals(Decoy.DECOY_LOCATION_MSG)){
 				double tmpL = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-				if(tmpL<lastDistance && tmpL < 150) {
+				if(tmpL<lastDistance && tmpL < detectRange) {
 					ld.x1 = (int)this.origin.x;
 					ld.y1 = (int)this.origin.y;
 					ld.x2 = (int)tmp.x; 
@@ -98,11 +103,17 @@ public class Torpedo extends Ball implements EventListenerInterface{
 			
 		}
 	}
-	//ÓãÀ×±»·¢Éä£ºÓãÀ×µÄËÙ¶ÈÎª4£»
+	/**
+	 * é±¼é›·æ–½æ”¾
+	 * @param object
+	 * @throws RemoteException
+	 * @throws NamingException
+	 * @throws SimRuntimeException
+	 */
 	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
 		isFired = true;
 		lastTarget = object;
-		new BallAnimation(this, this.simulator, Color.BLUE,150,ld);
+		new BallAnimation(this, this.simulator, Color.BLUE,(int)detectRange,ld);
 		next();
 	}
 	

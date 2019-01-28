@@ -86,9 +86,9 @@ public class Decoy extends Ball implements EventListenerInterface{
 	        	EntityMSG tmp = (EntityMSG) event.getContent();
 	        	//System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
 	        	double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-	        	if(dis<100) {
+	        	if(dis<this.detectRange) {
 	        		lastThreat = tmp;
-	        		if (dis < 20) {
+	        		if (dis < SimUtil.hit_distance) {
 						visualComponent.setColor(Color.BLACK);
 						isDead = true;
 						status = false;

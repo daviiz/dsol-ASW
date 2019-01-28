@@ -4,6 +4,8 @@ import nl.tudelft.simulation.language.d3.CartesianPoint;
 
 public class SimUtil {
 	
+	public static int  hit_distance = 15;
+	
 	/**
 	 * 
 	 * @param src_x

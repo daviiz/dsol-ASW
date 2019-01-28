@@ -190,7 +190,7 @@ public class Fleet extends Ball implements EventListenerInterface {
 						}
 					}
 					lastThreat = tmp;
-					if (dis < 20) {
+					if (dis < SimUtil.hit_distance) {
 						visualComponent.setColor(Color.BLACK);
 						isDead = true;
 						status = false;

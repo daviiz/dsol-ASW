@@ -65,8 +65,8 @@ public class Torpedo extends Ball implements EventListenerInterface {
 
 	private volatile LineData ld = new LineData(0, 0, 0, 0);
 	
-	private int next_x = -2 + stream.nextInt(0, 5);
-	private int next_y = -3 + stream.nextInt(0, 5);
+	private int next_x = -2 + stream.nextInt(0, 7);
+	private int next_y = -3 + stream.nextInt(0, 7);
 
 	/**
 	 * 雷达探测范围

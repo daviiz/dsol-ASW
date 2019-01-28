@@ -132,7 +132,7 @@ public class Torpedo extends Ball implements EventListenerInterface {
 	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
 		isFired = true;
 		lastTarget = object;
-		new BallAnimation(this, this.simulator, Color.BLUE, (int) detectRange, ld);
+		new BallAnimation(this, this.simulator, Color.cyan, (int) detectRange, ld);
 		next();
 	}
 

@@ -122,7 +122,7 @@ public class Decoy extends Ball implements EventListenerInterface{
     private synchronized void next() throws RemoteException, SimRuntimeException, NamingException
     {
     	if(visualComponent== null) {
-    		visualComponent = new BallAnimation(this, this.simulator, Color.GREEN,(int)detectRange,null);
+    		visualComponent = new BallAnimation(this, this.simulator, Color.pink,(int)detectRange,null);
     	}
         
     	this.origin = this.destination;

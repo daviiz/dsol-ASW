@@ -1,7 +1,11 @@
 package asw.main;
 
 import nl.tudelft.simulation.language.d3.CartesianPoint;
-
+/**
+ * 
+ * @author daiwenzhi
+ *
+ */
 public class SimUtil {
 	
 	/**

@@ -51,7 +51,7 @@ public class ASWModel extends AbstractDSOLModel.TimeDouble<DEVSSimulatorInterfac
             
             s1 = new Submarine("Sub1",200,100,this.simulator);
             
-            //发布方 .addListener 订阅方
+            //发布方  .addListener 订阅方
             //战舰1 消息发布
             f1.addListener(f1._decoy1, Fleet.FLEET_LOCATION_UPDATE_EVENT);
             f1.addListener(f1._decoy2, Fleet.FLEET_LOCATION_UPDATE_EVENT);

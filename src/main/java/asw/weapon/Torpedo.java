@@ -94,19 +94,19 @@ public class Torpedo extends Ball implements EventListenerInterface {
 				double tmpL = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 
 				if (tmpL < detectRange) {
-					//在探测范围内，并且是生存状态的实体才显示通信线
+					//在探测范围内 并且是生存状态的实体才显示通信线
 					if(tmp.status == true) {
 						ld.x1 = (int) this.origin.x;
 						ld.y1 = (int) this.origin.y;
 						ld.x2 = (int) tmp.x;
 						ld.y2 = (int) tmp.y;
 					}
-					//在探测范围内，找到更近的，设置其为目标
+					//在探测范围内 找到更近的 设置其为目标
 					if (tmpL < lastDistance) {
 						lastTarget = new EntityMSG(tmp);
 						lastDistance = tmpL;
 					}
-					//如果自己的目标已经死亡，在探测范围内寻找目标，找到就重新设置目标
+					//如果自己的目标已经死亡 在探测范围内寻找目标 找到就重新设置目标
 					if(this.lastTarget.status == false) {
 						lastDistance = tmpL;
 						lastTarget = new EntityMSG(tmp);

@@ -17,7 +17,6 @@ import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
 import nl.tudelft.simulation.event.EventType;
-import nl.tudelft.simulation.jstats.distributions.DistNormal;
 import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
 import nl.tudelft.simulation.language.d3.CartesianPoint;
@@ -32,18 +31,18 @@ public class Submarine extends Ball implements EventListenerInterface{
 	/**
 	 * 
 	 */
-	private static final long serialVersionUID = 2038980978768244127L;
-	
+	//private static final long serialVersionUID = 5001962561864197742L;
+
 	/** TOTAL_ORDERING_COST_EVENT is fired whenever ordering occurs. */
     public static final EventType SUBMARINE_LOCATION_UPDATE_EVENT = new EventType("SUBMARINE_LOCATION_UPDATE_EVENT");
 
     private String name;
 
 	/** the origin. */
-    private CartesianPoint origin = new CartesianPoint(200, 100, 0);
+    private CartesianPoint origin = new CartesianPoint(0,0,0);
 
     /** the destination. */
-    private CartesianPoint destination = new CartesianPoint(200, 100, 0);
+    private CartesianPoint destination = new CartesianPoint(0,0,0);
 
     /** the simulator. */
     private DEVSSimulatorInterface.TimeDouble simulator = null;
@@ -61,7 +60,7 @@ public class Submarine extends Ball implements EventListenerInterface{
     
     public boolean status = true;
 	
-	public Torpedo _t1 = null;;
+	public Torpedo _t1 = null;
 	public Torpedo _t2 = null;
 	
 	private int weaponCounts = 0;
@@ -79,22 +78,21 @@ public class Submarine extends Ball implements EventListenerInterface{
         this.simulator = simulator;
         // URL image = URLResource.getResource("/nl/tudelft/simulation/examples/dsol/animation/images/customer.jpg");
         // new SingleImageRenderable(this, simulator, image);
-        
+        _t1 = new Torpedo(name+"_torpedo1",x,y,simulator);
+        _t2 = new Torpedo(name+"_torpedo2",x,y,simulator);
+        weaponCounts = 2;
         
         try
         {
             new BallAnimation(this, simulator,Color.BLUE);
-            
             //_maneuver = new SubmarineManeuver(simulator);
-            _t1 = new Torpedo(name+"_torpedo1",x,y,simulator);
-            _t2 = new Torpedo(name+"_torpedo2",x,y,simulator);
-            weaponCounts = 2;
+            
         }
         catch (NamingException exception)
         {
             SimLogger.always().error(exception);
         }
-        this.next();
+       this.next();
     }
 	/**
      * next movement.
@@ -108,7 +106,7 @@ public class Submarine extends Ball implements EventListenerInterface{
         this.destination = new CartesianPoint(this.destination.x+1, this.destination.y+1, 0);
         this.startTime = this.simulator.getSimulatorTime();
         //System.out.println("--------------"+Math.abs(new DistNormal(stream, 9, 1.8).draw()));
-        this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
+        //this.stopTime = this.startTime + Math.abs(new DistNormal(stream, 9, 1.8).draw());
         this.stopTime = this.startTime + 10;
         this.simulator.scheduleEventAbs(this.stopTime, this, this, "next", null);
     }
@@ -128,9 +126,9 @@ public class Submarine extends Ball implements EventListenerInterface{
 			System.out.println(name+" received msg: "+tmp.name+" current location:x="+tmp.x+", y="+tmp.y);
 			
 			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-			//潜艇雷达探测方位：400
+			//潜艇雷达探测范围：400
 			if(dis < 400) {
-				//释放鱼雷：打击目标，且目标已经之前没有被锁定
+				//释放鱼雷：打击目标，且目标之前没有被锁定
 				if(!LockedTarget.containsKey(tmp.name)) {
 					if(weaponCounts == 2) {
 						try {

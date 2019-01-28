@@ -12,7 +12,6 @@ import asw.main.SimUtil;
 import asw.weapon.Decoy;
 import asw.weapon.Torpedo;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
-import nl.tudelft.simulation.dsol.logger.SimLogger;
 import nl.tudelft.simulation.dsol.simulators.DEVSSimulatorInterface;
 import nl.tudelft.simulation.event.EventInterface;
 import nl.tudelft.simulation.event.EventListenerInterface;
@@ -166,7 +165,7 @@ public class Fleet extends Ball implements EventListenerInterface {
 						.println(name + " received msg: " + tmp.name + " current location:x=" + tmp.x + ", y=" + tmp.y);
 				double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 
-				// Õ½½¢À×´ïÌ½²â·½Î»£º200
+				// Õ½½¢À×´ïÌ½²â·¶Î§£º200
 				if (dis < 200) {
 					if (aswPolicy == 1) {
 						// ÊÍ·ÅÓãÀ×ÓÕ¶ü²¢ÇÒ¶ã±ÜÓãÀ×¹¥»÷

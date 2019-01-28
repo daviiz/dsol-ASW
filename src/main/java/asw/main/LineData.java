@@ -1,5 +1,9 @@
 package asw.main;
-
+/**
+ * 用于绘制通信线的数据传递
+ * @author daiwenzhi
+ *
+ */
 public class LineData {
 	
 	public int x1;

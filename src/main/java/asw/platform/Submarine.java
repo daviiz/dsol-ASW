@@ -32,7 +32,7 @@ public class Submarine extends Ball implements EventListenerInterface{
 	/**
 	 * 
 	 */
-	//private static final long serialVersionUID = 5001962561864197742L;
+	private static final long serialVersionUID = 5001962561864197742L;
 
 	/** TOTAL_ORDERING_COST_EVENT is fired whenever ordering occurs. */
     public static final EventType SUBMARINE_LOCATION_UPDATE_EVENT = new EventType("SUBMARINE_LOCATION_UPDATE_EVENT");

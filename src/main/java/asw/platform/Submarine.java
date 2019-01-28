@@ -131,8 +131,7 @@ public class Submarine extends Ball implements EventListenerInterface{
 			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 			//潜艇雷达探测范围：400
 			if(dis < 400) {
-				//Circle.intersection(new Point2D.Double(this.origin.x, this.origin.y), 400, new Point2D.Double(tmp.x, tmp.y), 400);
-				//DirectionalLine dl = new DirectionalLine(this.origin.x, this.origin.y, tmp.x, tmp.y);
+				//用于绘制通信线：
 				ld.x1 = (int)this.origin.x;
 				ld.y1 = (int)this.origin.y;
 				ld.x2 = (int)tmp.x; 

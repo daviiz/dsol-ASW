@@ -38,7 +38,7 @@ public abstract class Ball extends EventProducer implements Locatable
     protected double theta = 0.0;
 
     /** the name of the ball. */
-    private String name = "";
+    public String name = "";
 
     /**
      * constructs a new Ball.
@@ -46,7 +46,7 @@ public abstract class Ball extends EventProducer implements Locatable
     public Ball()
     {
         super();
-        this.theta = 2 * Math.PI * Math.random();
+        this.theta = 0;
         Ball.number++;
         this.name = "" + Ball.number;
     }
@@ -56,7 +56,7 @@ public abstract class Ball extends EventProducer implements Locatable
     public Ball(String name)
     {
         super();
-        this.theta = 2 * Math.PI * Math.random();
+        this.theta = 0;
         Ball.number++;
         this.name = name ;//+ Ball.number;
     }

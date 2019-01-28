@@ -1,6 +1,7 @@
 package asw.platform;
 
 import java.awt.Color;
+import java.awt.geom.Point2D;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 
@@ -9,6 +10,7 @@ import javax.naming.NamingException;
 import asw.main.Ball;
 import asw.main.BallAnimation;
 import asw.main.EntityMSG;
+import asw.main.LineData;
 import asw.main.SimUtil;
 import asw.weapon.Torpedo;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
@@ -19,6 +21,7 @@ import nl.tudelft.simulation.event.EventListenerInterface;
 import nl.tudelft.simulation.event.EventType;
 import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
+import nl.tudelft.simulation.language.d2.Circle;
 import nl.tudelft.simulation.language.d3.CartesianPoint;
 import nl.tudelft.simulation.language.d3.DirectedPoint;
 /**
@@ -67,6 +70,8 @@ public class Submarine extends Ball implements EventListenerInterface{
 	
 	private HashMap<String, String> LockedTarget = new HashMap<String, String>();
 	
+	private volatile LineData ld = new LineData(0,0,0,0);
+	
 	//public Torpedo _t2;
 	
 	public Submarine(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) throws RemoteException, SimRuntimeException
@@ -84,7 +89,7 @@ public class Submarine extends Ball implements EventListenerInterface{
         
         try
         {
-            new BallAnimation(this, simulator,Color.BLUE);
+            new BallAnimation(this, simulator,Color.BLUE,400,ld);
             //_maneuver = new SubmarineManeuver(simulator);
             
         }
@@ -116,10 +121,10 @@ public class Submarine extends Ball implements EventListenerInterface{
 		double fraction = (this.simulator.getSimulatorTime() - this.startTime) / (this.stopTime - this.startTime);
         double x = this.origin.x + (this.destination.x - this.origin.x) * fraction;
         double y = this.origin.y + (this.destination.y - this.origin.y) * fraction;
-        return new DirectedPoint(x, y, 0, 0.0, 0.0, this.theta);
+        return new DirectedPoint(x, y, 0, 0.0, 0.0, 0);
 	}
 	@Override
-	public void notify(EventInterface event) throws RemoteException {
+	public synchronized void notify(EventInterface event) throws RemoteException {
 		if (event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT))
         {
 			EntityMSG tmp = (EntityMSG) event.getContent();
@@ -128,6 +133,13 @@ public class Submarine extends Ball implements EventListenerInterface{
 			double dis = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 			//潜艇雷达探测范围：400
 			if(dis < 400) {
+				
+				Circle.intersection(new Point2D.Double(this.origin.x, this.origin.y), 400, new Point2D.Double(tmp.x, tmp.y), 400);
+				//DirectionalLine dl = new DirectionalLine(this.origin.x, this.origin.y, tmp.x, tmp.y);
+				ld.x1 = (int)this.origin.x;
+				ld.y1 = (int)this.origin.y;
+				ld.x2 = (int)tmp.x; 
+				ld.y2 = (int)tmp.y;
 				//释放鱼雷：打击目标，且目标之前没有被锁定
 				if(!LockedTarget.containsKey(tmp.name)) {
 					if(weaponCounts == 2) {
@@ -152,6 +164,12 @@ public class Submarine extends Ball implements EventListenerInterface{
 						//逃逸--朝与目标相反方向运动：
 					}
 				}
+			}
+			else {
+				ld.x1 = 0;
+				ld.y1 = 0;
+				ld.x2 = 0; 
+				ld.y2 = 0;
 			}
 			//fireTimedEvent(Fleet.FLEET_LOCATION_UPDATE_EVENT, (LOC)event.getContent(), this.simulator.getSimulatorTime());
         }

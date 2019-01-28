@@ -113,7 +113,7 @@ public class Fleet extends Ball implements EventListenerInterface {
 	private synchronized void next() throws RemoteException, SimRuntimeException {
 		if (visualComponent == null) {
 			try {
-				visualComponent = new BallAnimation(this, simulator, Color.RED);
+				visualComponent = new BallAnimation(this, simulator, Color.RED,200,null);
 			} catch (NamingException e) {
 				e.printStackTrace();
 			}

@@ -8,6 +8,7 @@ import javax.naming.NamingException;
 import asw.main.Ball;
 import asw.main.BallAnimation;
 import asw.main.EntityMSG;
+import asw.main.LineData;
 import asw.main.SimUtil;
 import asw.platform.Fleet;
 import nl.tudelft.simulation.dsol.SimRuntimeException;
@@ -56,6 +57,8 @@ public class Torpedo extends Ball implements EventListenerInterface{
     private  EntityMSG lastTarget = null;
     
     private double lastDistance = 400;
+    
+    private volatile LineData ld = new LineData(0,0,0,0);
 
 	public Torpedo(String name, double x,double y,final DEVSSimulatorInterface.TimeDouble simulator) {
 		super(name);
@@ -67,15 +70,24 @@ public class Torpedo extends Ball implements EventListenerInterface{
 	}
 	
 	@Override
-	public void notify(EventInterface event) throws RemoteException {
+	public synchronized void notify(EventInterface event) throws RemoteException {
 		
 		if(isFired) {
 			EntityMSG tmp = (EntityMSG) event.getContent();
 			
 			if(event.getType().equals(Fleet.FLEET_LOCATION_UPDATE_EVENT) || event.getType().equals(Decoy.DECOY_LOCATION_MSG)){
 				double tmpL = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
-				if(tmpL<lastDistance) {
+				if(tmpL<lastDistance && tmpL < 150) {
+					ld.x1 = (int)this.origin.x;
+					ld.y1 = (int)this.origin.y;
+					ld.x2 = (int)tmp.x; 
+					ld.y2 = (int)tmp.y;
 					lastTarget = tmp;
+				}else {
+					ld.x1 = 0;
+					ld.y1 = 0;
+					ld.x2 = 0; 
+					ld.y2 = 0;
 				}
 			}
 			
@@ -85,7 +97,7 @@ public class Torpedo extends Ball implements EventListenerInterface{
 	public synchronized void fire(final EntityMSG object) throws RemoteException, NamingException, SimRuntimeException {
 		isFired = true;
 		lastTarget = object;
-		new BallAnimation(this, this.simulator, Color.YELLOW);
+		new BallAnimation(this, this.simulator, Color.BLUE,150,ld);
 		next();
 	}
 	

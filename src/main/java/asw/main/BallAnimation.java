@@ -4,14 +4,22 @@ package asw.main;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.ImageObserver;
 import java.rmi.RemoteException;
 
+import javax.media.j3d.BoundingSphere;
 import javax.naming.NamingException;
+import javax.vecmath.Point3d;
 
 import nl.tudelft.simulation.dsol.animation.Locatable;
 import nl.tudelft.simulation.dsol.animation.D2.Renderable2D;
+import nl.tudelft.simulation.dsol.animation.D2.Renderable2DInterface;
 import nl.tudelft.simulation.dsol.simulators.SimulatorInterface;
+import nl.tudelft.simulation.language.d2.Shape;
+import nl.tudelft.simulation.language.d3.BoundsUtil;
+import nl.tudelft.simulation.language.d3.DirectedPoint;
 
 /**
  * The Animation of a Ball.
@@ -31,6 +39,11 @@ public class BallAnimation extends Renderable2D<Locatable>
      * the color of the ballAnimation.
      */
     private Color color = Color.ORANGE;
+    
+    private int detectRange ;
+    
+    private LineData target = null;
+    
 
     /**
      * constructs a new BallAnimation.
@@ -39,11 +52,13 @@ public class BallAnimation extends Renderable2D<Locatable>
      * @throws NamingException on registration error
      * @throws RemoteException on remote animation error
      */
-    public BallAnimation(final Locatable source, final SimulatorInterface.TimeDouble simulator,Color _color)
+    public BallAnimation(final Locatable source, final SimulatorInterface.TimeDouble simulator,Color _color,int _detectRange,LineData _target)
             throws RemoteException, NamingException
     {
         super(source, simulator);
-        color = _color;
+        this.color = _color;
+        this.detectRange = _detectRange;
+        this.target = _target;
     }
 
     /** {@inheritDoc} */
@@ -56,9 +71,21 @@ public class BallAnimation extends Renderable2D<Locatable>
         graphics.setFont(f);
         graphics.setColor(Color.GRAY);
         graphics.drawString(getSource().toString(), (float) (Ball.RADIUS * -1.0), (float) (Ball.RADIUS * 1.0));
+        if(detectRange>0) {
+        	graphics.setColor(this.color);
+            graphics.drawOval(-detectRange, -detectRange, detectRange*2, detectRange*2);
+        }
+        
+        if(this.target != null) {
+    		graphics.setColor(this.color);
+    		int x=0,y=0;
+    			x = target.x1>target.x2 ? (-1)*(Math.abs(target.x1-target.x2)):(Math.abs(target.x1-target.x2));
+    			y = target.y1>target.y2 ? (Math.abs(target.y1-target.y2)):(-1)*(Math.abs(target.y1-target.y2));;
+            graphics.drawLine(0,0,x,y);
+        }
         
     }
-
+    
     /**
      * @return Returns the color.
      */

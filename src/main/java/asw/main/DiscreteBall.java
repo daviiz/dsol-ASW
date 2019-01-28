@@ -58,7 +58,7 @@ public class DiscreteBall extends Ball
         // new SingleImageRenderable(this, simulator, image);
         try
         {
-            new BallAnimation(this, simulator,Color.RED);
+            new BallAnimation(this, simulator,Color.RED,0,null);
         }
         catch (NamingException exception)
         {

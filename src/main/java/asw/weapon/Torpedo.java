@@ -64,6 +64,9 @@ public class Torpedo extends Ball implements EventListenerInterface {
 	private double lastDistance = 250;
 
 	private volatile LineData ld = new LineData(0, 0, 0, 0);
+	
+	private int next_x = -2 + stream.nextInt(0, 5);
+	private int next_y = -3 + stream.nextInt(0, 5);
 
 	/**
 	 * 雷达探测范围
@@ -91,20 +94,23 @@ public class Torpedo extends Ball implements EventListenerInterface {
 				double tmpL = SimUtil.calcLength(this.origin.x, this.origin.y, tmp.x, tmp.y);
 
 				if (tmpL < detectRange) {
-					ld.x1 = (int) this.origin.x;
-					ld.y1 = (int) this.origin.y;
-					ld.x2 = (int) tmp.x;
-					ld.y2 = (int) tmp.y;
-					
+					//在探测范围内，并且是生存状态的实体才显示通信线
+					if(tmp.status == true) {
+						ld.x1 = (int) this.origin.x;
+						ld.y1 = (int) this.origin.y;
+						ld.x2 = (int) tmp.x;
+						ld.y2 = (int) tmp.y;
+					}
+					//在探测范围内，找到更近的，设置其为目标
 					if (tmpL < lastDistance) {
 						lastTarget = new EntityMSG(tmp);
 						lastDistance = tmpL;
 					}
+					//如果自己的目标已经死亡，在探测范围内寻找目标，找到就重新设置目标
 					if(this.lastTarget.status == false) {
 						lastDistance = tmpL;
 						lastTarget = new EntityMSG(tmp);
 					}
-					
 				} else {
 					ld.x1 = 0;
 					ld.y1 = 0;
@@ -142,10 +148,9 @@ public class Torpedo extends Ball implements EventListenerInterface {
 		// stream.nextInt(0, 200), 0);
 		// this.destination = new CartesianPoint(this.destination.x+4,
 		// this.destination.y+4, 0);
+		
 		if (lastTarget == null || lastTarget.status == false) {
-			int x = -2 + stream.nextInt(0, 5);
-			int y = -3 + stream.nextInt(0, 5);
-			this.destination = new CartesianPoint(this.destination.x + x, this.destination.y + y, 0);
+			this.destination = new CartesianPoint(this.destination.x + next_x, this.destination.y + next_y, 0);
 		} else {
 			this.destination = SimUtil.nextPoint(this.origin.x, this.origin.y, lastTarget.x, lastTarget.y, 4.0, true);
 		}

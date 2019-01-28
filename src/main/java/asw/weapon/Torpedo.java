@@ -21,7 +21,11 @@ import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
 import nl.tudelft.simulation.language.d3.CartesianPoint;
 import nl.tudelft.simulation.language.d3.DirectedPoint;
-
+/**
+ * 
+ * @author daiwenzhi
+ *
+ */
 public class Torpedo extends Ball implements EventListenerInterface{
 
 	private static final long serialVersionUID = -8295279255703776031L;

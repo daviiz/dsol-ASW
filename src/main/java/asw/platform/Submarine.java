@@ -1,7 +1,6 @@
 package asw.platform;
 
 import java.awt.Color;
-import java.awt.geom.Point2D;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 
@@ -21,7 +20,6 @@ import nl.tudelft.simulation.event.EventListenerInterface;
 import nl.tudelft.simulation.event.EventType;
 import nl.tudelft.simulation.jstats.streams.MersenneTwister;
 import nl.tudelft.simulation.jstats.streams.StreamInterface;
-import nl.tudelft.simulation.language.d2.Circle;
 import nl.tudelft.simulation.language.d3.CartesianPoint;
 import nl.tudelft.simulation.language.d3.DirectedPoint;
 /**

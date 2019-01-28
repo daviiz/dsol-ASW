@@ -4,6 +4,9 @@ import nl.tudelft.simulation.language.d3.CartesianPoint;
 
 public class SimUtil {
 	
+	/**
+	 * 打击距离 距离小于此值是视为 命中目标
+	 */
 	public static int  hit_distance = 15;
 	
 	/**
